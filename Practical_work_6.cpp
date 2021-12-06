@@ -95,7 +95,10 @@ int main()
     for (mtd i = mtd::begin; i != mtd::end; ++i)
     {
         SLE sle(task, Method(i));
-        print(sle.solution());
+        if (sle.options().get().rep == true)
+        {
+            print(sle.solution());
+        }
     }
 
     /*Method method(aboba);*/
