@@ -8,7 +8,7 @@ insert_final_newline = false
 trim_trailing_whitespace = true
 
 [*.{c,h,cpp,hpp}]
-indent_size = 2
+indent_size = 4
 
 # Markdown Files
 [*.md]
