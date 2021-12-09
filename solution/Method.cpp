@@ -1,11 +1,13 @@
 ﻿#include "Method.h"
 #include <string>
 #include <vector>
+#include <fstream>
 
 // *********************
 
 const std::vector <funs::funptr_t> methods({ funs::LU, funs::JACOBI, funs::SEIDEL });
 const std::vector <std::string> names({ "LU", "JACOBI", "SEIDEL" });
+void saveArray(const char* nameFile, double* ptr2deltaArray, const int iterEnd = 1);
 
 Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
 {
@@ -134,7 +136,12 @@ Matrix funs::JACOBI(const Matrix& A, const Matrix& b, const Options& options)
         x = g - B * x_prev;
         norm = get_norm(x - x_prev);
         iter++;
-    } while (norm > options.get().accst && options.get().maxitr >= iter);
+        saveArray("E:\\hello.txt", &norm);
+        std::ofstream bebrik;
+        bebrik.open("E:\\hello.txt", std::ios::app);
+        bebrik << "\n";
+        bebrik.close();
+    } while (options.get().maxitr >= iter);
 
     std::cout << "Selected method: " << names.at(static_cast<unsigned>(mtd::JACOBI)) << std::endl;
     std::cout << "Quantity iterations: " << iter << std::endl;
@@ -166,7 +173,17 @@ Matrix funs::SEIDEL(const Matrix& A, const Matrix& b, const Options& options)
         }
         norm = get_norm(x - x_prev);
         iter++;
-    } while (norm > options.get().accst && options.get().maxitr >= iter);
+        saveArray("E:\\hello.txt", &norm);
+        std::ofstream bebrik;
+        bebrik.open("E:\\hello.txt", std::ios::app);
+        bebrik << "\n";
+        bebrik.close();
+    } while (options.get().maxitr >= iter);
+
+    std::ofstream bebrik;
+    bebrik.open("E:\\hello.txt", std::ios::app);
+    bebrik << "\n";
+    bebrik.close();
 
     std::cout << "Selected method: " << names.at(static_cast<unsigned>(mtd::SEIDEL)) << std::endl;
     std::cout << "Quantity iterations: " << iter << std::endl;
@@ -188,3 +205,18 @@ void Method::set(const mtd m)
     this->key = m;
     this->ptr = methods.at(static_cast<unsigned>(m));
 }
+
+
+void saveArray(const char* nameFileAndWay, double* ptr2deltaArray, const int iterEnd)
+{
+    std::ofstream out;
+    out.open(nameFileAndWay, std::ios::app);
+    if (out.is_open())
+    {
+        out.width(10);
+        out.precision(16);
+
+        for (int iter = 0; iter < iterEnd; iter++)
+            out << *(ptr2deltaArray + iter) << " ";
+    }
+};
