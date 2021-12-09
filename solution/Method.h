@@ -25,7 +25,6 @@ namespace funs
 	Matrix JACOBI(const Matrix& A, const Matrix& b, const Options& options);
 	Matrix SEIDEL(const Matrix& A, const Matrix& b, const Options& options);
 }
-
 // *********************
 
 

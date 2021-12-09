@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <iostream>
 #include <vector>
@@ -11,12 +11,12 @@ private:
 	const unsigned int get_index(unsigned int row, unsigned int col) const;
 
 	// 0) Values:
-	std::vector <double> values;	// ������ �������� (������� ����� �������� ��� ������������������ ��������)
-	unsigned int rown;				// ���������� �����
-	unsigned int coln;				// ���������� ��������
+	std::vector <double> values;
+	unsigned int rown;				
+	unsigned int coln;				
 
 public:
-	// 1) �onstructors:
+	// 1) Constructors:
 	Matrix();
 	Matrix(const unsigned int rown, const unsigned int coln);
 

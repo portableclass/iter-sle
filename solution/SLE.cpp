@@ -26,14 +26,17 @@ SLE::SLE(const Task& t, const Method& m, const Options& o) : _task(t)
 
 const Matrix& SLE::solve()
 {
-	if (this->_solve_flag == true)
-		return _solution;
+	if (this->_solve_flag == true) 
+	{
+		return this->_solution;
+	}
 	else
 	{
 		funs::funptr_t ptr = this->_method.get();
 		this->_solution = ptr(this->_task.at(tsk::A), this->_task.at(tsk::b), this->_options);
+		this->_solve_flag = true;
 
-		this->_solve_flag == true;
+		return this->_solution;
 	}
 }
 

@@ -1,7 +1,6 @@
-#include "Method.h"
+﻿#include "Method.h"
 #include <string>
 #include <vector>
-
 
 // *********************
 
@@ -11,7 +10,7 @@ const std::vector <std::string> names({ "LU", "JACOBI", "SEIDEL" });
 Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
 {
     unsigned int size = A.get_cSize();
-    Matrix LU (size, size);
+    Matrix LU(size, size);
     Matrix L(size, size);
     Matrix U(size, size);
     double temp;
@@ -31,7 +30,7 @@ Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
                 // Determination of the elements of the Matrix U
                 for (size_t k = 0; k < i; k++)
                     temp += L(i, k) * U(k, j);
-                U(i, j) =  A(i, j) - temp;
+                U(i, j) = A(i, j) - temp;
             }
             else
             {
@@ -50,12 +49,12 @@ Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
         for (size_t j = 0; j < size; j++)
         {
             if (i <= j)
-                LU(i, j) =  U(i, j);
+                LU(i, j) = U(i, j);
             else
                 LU(i, j) = L(i, j);
         }
     }
-  
+
     if (LU(0, 0) == 0) {
         // required = the number of the row in which A[required][0] != 0 
         unsigned int required;
@@ -66,8 +65,8 @@ Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
                 for (size_t col = 0; col < LU.get_cSize(); col++)
                 {
                     temp = LU(required, col);
-                    LU(required, col) =  LU(required + 1, col);
-                   LU(required + 1, col) =  temp;
+                    LU(required, col) = LU(required + 1, col);
+                    LU(required + 1, col) = temp;
                 }
                 break;
             }
@@ -83,34 +82,37 @@ Matrix funs::LU(const Matrix& A, const Matrix& b, const Options& options)
     {
         y(k, 0) = b(k, 0);
         for (size_t p = 0; p < k; p++)
-            y(k, 0) =  y(k, 0) - L(k, p) * y(p, 0);
+            y(k, 0) = y(k, 0) - L(k, p) * y(p, 0);
     }
 
     // reverse move for matrix U
     const unsigned int sizeForX = U.get_rSize() - 1;
-    x(sizeForX, 0) =  y(sizeForX, 0) / U(sizeForX, sizeForX);
+    x(sizeForX, 0) = y(sizeForX, 0) / U(sizeForX, sizeForX);
     for (int k = sizeForX - 1; k >= 0; k--)
     {
-        x(k, 0) =  y(k, 0);
+        x(k, 0) = y(k, 0);
         for (size_t p = k + 1; p < sizeForX + 1; p++)
-            x(k, 0) =  x(k, 0) - U(k, p) * x(p, 0);
-        x(k, 0) =  x(k, 0) / U(k, k);
+            x(k, 0) = x(k, 0) - U(k, p) * x(p, 0);
+        x(k, 0) = x(k, 0) / U(k, k);
     }
+
+    std::cout << "Selected method: " << names.at(static_cast<unsigned>(mtd::LU)) << std::endl;
     return x;
 }
 
+
 Matrix funs::JACOBI(const Matrix& A, const Matrix& b, const Options& options)
 {
-    Matrix x(b.get_rSize(), 1);
-    Matrix x_prev(b.get_rSize(), 1);
+    Matrix x(b.get_rSize(), b.get_cSize());
+    Matrix x_prev(b.get_rSize(), b.get_cSize());
     double norm;
     unsigned int iter = 0;
-
-    ////////////////////////////////////////// 
     const unsigned int size = A.get_cSize();
+    Matrix revD(size, size);
+
+    ////////////////////////////////////////// óáðàòü
     Matrix L(size, size);
     Matrix U(size, size);
-    Matrix revD(size, size);
     for (size_t i = 0; i < size; i++)
     {
         for (size_t j = 0; j < size; j++)
@@ -119,11 +121,11 @@ Matrix funs::JACOBI(const Matrix& A, const Matrix& b, const Options& options)
                 L(i, j) = A(i, j);
             if (i < j)
                 U(i, j) = A(i, j);
-            else
-                revD(i, j) = 1 / A(i, j);
         }
+        revD(i, i) = 1 / A(i, i);
     }
     //////////////////////////////////////
+
     Matrix g = revD * b;
     Matrix B = revD * (L + U);
 
@@ -133,10 +135,12 @@ Matrix funs::JACOBI(const Matrix& A, const Matrix& b, const Options& options)
         norm = get_norm(x - x_prev);
         iter++;
     } while (norm > options.get().accst && options.get().maxitr >= iter);
-    
-    std::cout << "Quantity iterations " << iter << std::endl;
+
+    std::cout << "Selected method: " << names.at(static_cast<unsigned>(mtd::JACOBI)) << std::endl;
+    std::cout << "Quantity iterations: " << iter << std::endl;
     return x;
 }
+
 
 Matrix funs::SEIDEL(const Matrix& A, const Matrix& b, const Options& options)
 {
@@ -152,10 +156,9 @@ Matrix funs::SEIDEL(const Matrix& A, const Matrix& b, const Options& options)
         {
             sum1 = 0;
             sum2 = 0;
-            
+
             for (int loop1 = i - 1; loop1 > 0; loop1--)
                 sum1 += A(i, loop1) * x(loop1, 0);
-            
             for (int loop2 = i + 1; loop2 < x.get_rSize(); loop2++)
                 sum2 += A(i, loop2) * x_prev(loop2, 0);
 
@@ -163,9 +166,10 @@ Matrix funs::SEIDEL(const Matrix& A, const Matrix& b, const Options& options)
         }
         norm = get_norm(x - x_prev);
         iter++;
-    } while (norm > accst && maxiter >= iter);
-    
-    std::cout << "Quantity iterations " << iter << std::endl;
+    } while (norm > options.get().accst && options.get().maxitr >= iter);
+
+    std::cout << "Selected method: " << names.at(static_cast<unsigned>(mtd::SEIDEL)) << std::endl;
+    std::cout << "Quantity iterations: " << iter << std::endl;
     return x;
 }
 

@@ -1,4 +1,4 @@
-﻿#include "Matrix.h"
+#include "Matrix.h"
 #include <iostream>
 #include <vector>
 #include <string>
@@ -10,11 +10,10 @@
 // -1) The private geter gets a linear index:
 const unsigned int Matrix::get_index(unsigned int row, unsigned int col) const
 {
-	// n = i - 1 + (j - 1) * rown    � ������, ���� i in [1, rown], � j in [1, coln]  =>
+	// n = i - 1 + (j - 1) * rown		i in [1, rown], j in [1, coln]  =>
 	// => return row - 1 + (col - 1) * this->rown;
-	// n = i + j * rown		� ������, ���� i in [0, rown-1], � j in [0, coln-1] =>
+	// n = i + j * rown		i in [0, rown-1], j in [0, coln-1] =>
 	// => return row + col * this->rown;
-	// ������ ��������� �������� � exel ����� �������.
 
 	assert((col < this->coln) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE"); // assert(bool = true)
 	assert((row < this->rown) && "ERROR_MATRIX_INDEX_IS_OUT_SIZE");
@@ -22,7 +21,7 @@ const unsigned int Matrix::get_index(unsigned int row, unsigned int col) const
 	return row + col * this->rown;
 }
 
-// 1) �onstructors:
+// 1) Constructors:
 Matrix::Matrix() : values(0), rown(0), coln(0) {}
 Matrix::Matrix(const unsigned int rown, const unsigned int coln) : rown(rown), coln(coln), values(coln* rown) {}
 
@@ -57,11 +56,9 @@ const double& Matrix::operator()(const unsigned int row, const unsigned int col)
 
 Matrix& Matrix::operator=(const Matrix& Any)
 {
-	// 0. �������� �� ��������������.
+	// 0.
 	if (this == &Any)
-	{
 		return *this;
-	}
 
 	// 1. The copying of the object values:
 	this->coln = Any.coln;
@@ -76,18 +73,11 @@ Matrix& Matrix::operator+=(const Matrix& R)
 	assert((this->rown == R.rown) && (this->coln == R.coln) && "ERROR_MATRIXES_SIZES_SHOULD_BE_EQUAL");
 	assert((this->rown != 0) && (this->coln != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	// ����� ���������������� �������:
-	// +: ����������������
-	// -: � ������ ������� ������������ (�� ����� ���� ���)
 	for (size_t i = 0; i < this->values.size(); i++)
 	{
 		this->values.at(i) += R.values.at(i);
 	}
 
-	// ������� ������������ ������������� �����:
-	// +: � ������ ����� �������������� ���� ���� ����� ���� : " (*this)(row, col) +=... " ����� ��������
-	// -: ���� ����� ���������������� (�� ����� ���� ������� �� ����� ������������)
-	// 
 	// for (size_t row = 0; row < this->rown; row++)
 	// {
 	// 	 for (size_t col = 0; col < this->coln; col++)
@@ -139,7 +129,7 @@ Matrix& Matrix::operator*=(const Matrix& R)
 		{
 			for (size_t i = 0; i < this->coln; i++)
 			{
-				Res(row, col) += (*this)(row, i) * R(i, col); // (*this)(row, col) - ���������� ������ �� �������
+				Res(row, col) += (*this)(row, i) * R(i, col); // (*this)(row, col)
 			}
 		}
 	}
@@ -156,8 +146,8 @@ Matrix operator+(const Matrix& L, const Matrix& R)
 	assert((L.get_rSize() == R.get_rSize()) && "ERROR_MATRIXES_SIZES_SHOULD_BE_EQUAL");
 	assert((L.get_rSize() != 0) && (R.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	return Matrix(L) += R; // �������� ��������� ������ ������������
-	// �������������� ������, ����������� �� ������������� ������������ � ��������� +=.
+	return Matrix(L) += R; 
+
 	//Matrix Res(L.get_rSize(), R.get_cSize());
 	//
 	//for (size_t col = 0; col < R.get_cSize(); col++)
@@ -177,8 +167,8 @@ Matrix operator-(const Matrix& L, const Matrix& R)
 	assert((L.get_rSize() == R.get_rSize()) && "ERROR_MATRIXES_SIZES_SHOULD_BE_EQUAL");
 	assert((L.get_rSize() != 0) && (R.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	return Matrix(L) -= R; // �������� ��������� ������ ������������
-	// �������������� ������, ����������� �� ������������� ������������ � ��������� -=.
+	return Matrix(L) -= R;
+
 	//Matrix Res(L.get_rSize(), R.get_cSize());
 	// 
 	//for (size_t col = 0; col < R.get_cSize(); col++)
@@ -198,21 +188,14 @@ Matrix operator*(const Matrix& L, const Matrix& R)
 	assert((L.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 	assert((L.get_rSize() != 0) && (R.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	//return Matrix(L) *= R; // �������� ��������� ������ ������������ // 1 ����������� L, 2 ����������� � ��������� �� ��������� ������� *=
-	// �������������� ������, ����������� �� ������������� ������������ � ��������� *=.
+	//return Matrix(L) *= R; //
 
 	Matrix Res(L.get_rSize(), R.get_cSize());
 
 	for (size_t col = 0; col < R.get_cSize(); col++)
-	{
 		for (size_t row = 0; row < L.get_rSize(); row++)
-		{
 			for (size_t i = 0; i < L.get_cSize(); i++)
-			{
 				Res(row, col) += L(row, i) * R(i, col);
-			}
-		}
-	}
 
 	return Res;
 }
@@ -221,8 +204,8 @@ Matrix operator*(const double k, const Matrix& R)
 	// 0. Checking of the sizes:
 	assert((R.get_rSize() != 0) && (R.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	return Matrix(R) *= k;// �������� ��������� ������ ������������
-	// �������������� ������, ����������� �� ������������� ������������ � ��������� +=.
+	return Matrix(R) *= k;
+
 	//Matrix Res(R.get_rSize(), R.get_cSize());
 	// 
 	//for (size_t col = 0; col < R.get_cSize(); col++)
@@ -240,8 +223,8 @@ Matrix operator*(const Matrix& L, const double k)
 	// 0. Checking of the sizes:
 	assert((L.get_rSize() != 0) && (L.get_cSize() != 0) && "ERROR_MATRIXES_SIZES_SHOULD_BE_NO_ZERO");
 
-	return Matrix(L) *= k;	// �������� ��������� ������ ������������
-	// �������������� ������, ����������� �� ������������� ������������ � ��������� *=.
+	return Matrix(L) *= k;
+
 	//Matrix Res(L.get_rSize(), L.get_cSize());
 	// 
 	//for (size_t col = 0; col < L.get_cSize(); col++)

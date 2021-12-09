@@ -13,7 +13,7 @@ Options::Options(const opt::OPTIONS_s opt)
 	if (opt.accst > 0)
 	{
 		this->options.accst = opt.accst;
-		std::cout << "The MAXITER was set successfully!" << std::endl;
+		std::cout << "The ACCST was set successfully!" << std::endl;
 	}
 	else
 		std::cout << "The MAXITER and ACCURASITY were set default values!" << std::endl;
@@ -31,7 +31,7 @@ Options::Options(const bool iterrep, const unsigned int maxiter, const double ac
 	if (accurasitu > 0)
 	{
 		this->options.accst = accurasitu;
-		std::cout << "The MAXITER was set successfully!" << std::endl;
+		std::cout << "The ACCST was set successfully!" << std::endl;
 	}
 	else
 		std::cout << "The MAXITER and ACCURASITY were set default values!" << std::endl;
