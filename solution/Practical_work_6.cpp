@@ -1,6 +1,5 @@
 // Practical_work_6.cpp
 
-#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 #include <vector>
 #include "Matrix.h"
@@ -8,11 +7,8 @@
 #include "Options.h"
 #include "Task.h"
 #include "SLE.h"
-#include <fstream>
 #include <ctime>
 #include <cassert>
-
-void saveArray(const char* nameFile, double* ptr2deltaArray, const int iterEnd = 1);
 
 enum class ERROR
 {
@@ -102,42 +98,20 @@ int main()
     double seconds;
 
     // calling solution methods
-    for (size_t i = 0; i < 10; i++)
+    for (mtd i = mtd::begin; i != mtd::end; ++i)
     {
-        for (mtd i = mtd::begin; i != mtd::end; ++i)
-        {
 
-            SLE sle(task, Method(i), options);
-            clock_t start = clock();
-            if (sle.options().get().rep == true)
-                print(sle.solution());
-            else
-                sle.solution();
-            clock_t end = clock();
-            seconds = ((double)end - start) / CLOCKS_PER_SEC;
-            /*  printf("The time: %f seconds\n\n\n", seconds);*/
-            saveArray("E:\\hello.txt", &seconds);
-        }
+        SLE sle(task, Method(i), options);
+        clock_t start = clock();
+        if (sle.options().get().rep == true)
+            print(sle.solution());
+        else
+            sle.solution();
+        clock_t end = clock();
 
-        std::ofstream bebrik;
-        bebrik.open("E:\\hello.txt", std::ios::app);
-        bebrik << "\n";
-        bebrik.close();
+        seconds = ((double)end - start) / CLOCKS_PER_SEC;
+        printf("The time: %f seconds\n\n", seconds);
     }
 
     return 0;
 }
-
-void saveArray(const char* nameFileAndWay, double* ptr2deltaArray, const int iterEnd)
-{
-    std::ofstream out;
-    out.open(nameFileAndWay, std::ios::app);
-    if (out.is_open())
-    {
-        out.width(10);
-        out.precision(16);
-
-        for (int iter = 0; iter < iterEnd; iter++)
-            out << *(ptr2deltaArray + iter) << " ";
-    }
-};

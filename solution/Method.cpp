@@ -181,7 +181,7 @@ Method::Method(const mtd m) : key(m), ptr(methods.at(static_cast<unsigned>(m))) 
 
 const funs::funptr_t Method::get() const
 {
-    return this->ptr;
+    return this->ptr;    
 }
 void Method::set(const mtd m)
 {
